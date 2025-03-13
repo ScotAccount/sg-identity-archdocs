@@ -1,0 +1,31 @@
+# Project information
+site_name: Digital Identity Service Architecture
+site_description: Architectural documentation with Markdown and PlantUML describing the design of the Digital Identity Service
+
+
+# Directory configuration (optional, defaults shown)
+docs_dir: docs  # Where your Markdown files are stored
+site_dir: site  # Where the generated site will be output
+
+# Theme configuration (using Material for MkDocs for a modern look)
+theme:
+  name: mkdocs
+
+# Plugins
+plugins:
+  - plantuml:  
+      puml_url: http://127.0.0.1:8080
+
+# Markdown extensions (enhance Markdown features)
+markdown_extensions:
+  - admonition  # For callouts/notes
+  - codehilite  # Syntax highlighting for code blocks
+
+# Navigation (optional, can be auto-generated or customized)
+nav:
+   - Home: index.md
+   - Services: 
+      - ScotAccount: scotaccount.md
+      - VerifyYourIdentity: verifyyouridentity.md
+      - MySafe: mysafe.md
+      - SG Workspaces Service: sgworkspaces.md
