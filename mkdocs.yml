@@ -28,4 +28,7 @@ nav:
       - ScotAccount: scotaccount.md
       - VerifyYourIdentity: verifyyouridentity.md
       - MySafe: mysafe.md
+   - Integrations:
+      - Cifas: cifas.md
+   - Platform:
       - SG Workspaces Service: sgworkspaces.md
