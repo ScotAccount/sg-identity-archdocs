@@ -47,34 +47,114 @@ use the OIDC protocol.</p></td>
 </table>
 
 ## OIDC flow
-The service implements a standard OIDC flow plus additional verification step:
+
 ```puml
-@startuml 
+@startuml Enhanced DIS OIDC Flow with VYI Consent
 
-actor User as user
-participant "Client Application" as client
-participant "SSO (Authorization Server)" as sso
-participant "MySafe (Resource Server)" as mysafe
+actor User
+participant "Relying Party (Web App)" as RelyingParty
+participant "User Agent (Browser)" as Browser
+participant "SSO" as SSO
+participant "MySafe" as MySafe
+participant "VYI (Verify Your Identity)" as VYI
 
-user -> client: Access Application
-client -> sso: (1) Redirect to /authorize endpoint
-sso -> user: (2) Prompt for consent & login (if not authenticated)
-user -> sso: Consent approval & credentials
-sso -> client: (3) Redirect back with Authorization Code
+User -> RelyingParty: Access protected resource
+RelyingParty -> Browser: Redirect to /authorize\n(client_id, scopes, redirect_uri, response_type=code, state)
+Browser -> SSO: GET /authorize\n(client_id, scopes, redirect_uri, response_type=code, state)
+SSO -> Browser: Show Authentication UI (Login or Sign-up)
+User -> Browser: Submit authentication details
+Browser -> SSO: POST authentication details
+SSO -> MySafe: Check for existence of verified claims\n(for user)
 
-client -> sso: (4) Token Exchange (POST /token)
-sso -> client: (5) Access Token + ID Token
-
-client -> mysafe: (6) Access Protected Resource (using Access Token)
-mysafe -> client: (7) Return Resource & Claims
+alt Verified claims not found in MySafe
+    MySafe -> SSO: No verified claims available
+    SSO -> VYI: Verify user identity\n(verify claims: name, date of birth, address, email, mobile, etc.)
+    VYI -> SSO: Verification result\n(pass/fail)
+    note right: Only proceeds if verification passes
+    opt Verification successful
+        VYI -> Browser: Show consent to store UI
+        User -> Browser: Submit consent to store
+        Browser -> VYI: POST consent to store
+        VYI -> MySafe: Store verified claims\n(for user)
+        MySafe -> VYI: Storage completed
+        MySafe -> SSO: Return verified claims\n(for user)
+    end
+else Verified claims exist in MySafe
+    MySafe -> SSO: Verified claims available
+    MySafe -> SSO: Return verified claims\n(for user)
+end
+SSO -> Browser: Show consent to share UI\n(user's verified claims for requested scopes)
+User -> Browser: Provide consent to share
+Browser -> SSO: Submit consent to share
+SSO -> Browser: Redirect to redirect_uri\n(code, state)
+Browser -> RelyingParty: GET redirect_uri\n(code, state)
+RelyingParty -> SSO: POST /token\n(code, client_id, client_secret, redirect_uri)
+SSO -> RelyingParty: {access_token, id_token, refresh_token}
+RelyingParty -> SSO: GET /values\n(access_token)
+SSO -> MySafe: Request verified claims\n(user's verified claims for requested scopes)
+MySafe -> SSO: Verified claims\n(user's verified claims for requested scopes)
+SSO -> RelyingParty: Verified claims\n(user's verified claims for requested scopes)
 
 @enduml
 ```
 
+This sequence diagram represents an **Enhanced OpenID Connect (OIDC) Flow with Identity Verification and Consent Management** includes an additional identity verification step, the storage of verified claims, and user consent to share specific claims with the Relying Party (RP). The enhanced flow empowers the user to control which verified claims (e.g., name, date of birth, email, etc.) are shared, ensuring greater transparency and control over their data. Below is a concise explanation of the key elements of the flow:
+
+### 1. **Resource Access and Authorization Request**
+- The **User** initiates access to a protected resource on the **Relying Party (Web App)**.
+- The RP redirects the user to the **SSO** authorization endpoint with the OIDC parameters (`client_id`, `scopes`, `redirect_uri`, `response_type=code`, `state`).
+- The **Browser** forwards the OIDC request to the **SSO** server.
+
+### 2. **User Authentication**
+- The **SSO** presents the user with an **Authentication UI** (e.g., login or sign-up).
+- The **User** submits authentication details through the **Browser**, which are sent to the **SSO**.
+
+### 3. **Verified Claims Discovery**
+- The **SSO** checks for the existence of the user's verified claims in **MySafe**.
+- Two possible scenarios follow:
+  - **If verified claims exist** in MySafe:
+    - **MySafe** returns the verified claims directly to the **SSO**.
+  - **If verified claims are not found**:
+    - The **SSO** initiates an **identity verification process** via **VYI (Verify Your Identity)**.
+
+### 4. **Identity Verification and Consent to Store Claims**
+- The **VYI** service verifies the user’s identity using their provided data (e.g., name, date of birth, address, email, mobile).
+- Upon successful verification:
+  - The **VYI** shows a **Consent to Store UI** to the user, allowing them to approve the storage of verified claims in **MySafe**.
+  - The user submits their consent via the **Browser**.
+  - After receiving consent, the **VYI** securely stores the user's verified claims in **MySafe**.
+  - **MySafe** confirms the storage completion and notifies the **SSO** that the verified claims are now available.
+
+### 5. **Consent to Share Claims**
+- The **SSO** displays a **Consent to Share UI** to the user, listing the verified claims being requested by the RP.
+- The user is given the choice to decide which verified claims (e.g., name, date of birth, email, etc.) are shared with the RP.
+- The user submits their consent via the **Browser**, and the consent details are sent to the **SSO**.
+
+### 6. **Token Exchange**
+- Upon receiving the user's consent to share, the **SSO** redirects the user to the RP’s `redirect_uri` with an authorization `code` and state.
+- The RP exchanges the authorization `code` for tokens by sending a POST request to the **SSO**'s token endpoint.
+- The **SSO** returns an `access_token`, `id_token`, and `refresh_token` to the RP.
+
+### 7. **Request for Verified Claims**
+- The RP sends a request to the **SSO** to retrieve the user's verified claims using the `access_token`.
+- The **SSO** forwards the request to **MySafe** to fetch the verified claims for the user's requested scopes.
+- **MySafe** responds with the claims, which the **SSO** then delivers to the RP.
+
+### 8. **Access to Protected Resource**
+- The RP uses the verified claims received from the **SSO** to serve the user’s requested resource, maintaining a secure and seamless user experience.
+
+### **Key Highlights of the Extended OIDC Flow**
+- **Identity Verification Step**: If verified claims are not present, the flow incorporates an identity verification step via **VYI**. 
+- **Consent to Store**: After successful verification, the user must consent before their claims are stored in **MySafe**.
+- **Granular Claim Sharing**:
+  - The user retains control over which verified claims are shared with the RP.
+  - This ensures transparency and alignment with privacy principles.
+- **Seamless Claim Management**: Secure interactions between the **SSO**, **MySafe**, and **VYI** ensure the integrity and availability of verified claims for the user's convenience.
+
+This extended flow enhances the standard OIDC process by integrating identity verification, secure storage, and user-managed consent, ensuring robust security and user trust.
+
+
 ## System Context View
-This model describes the external environment in which the Digital
-Identity Scotland system operates and identifies the parties which
-interact with or are used by the system.
 
 ```puml
 @startuml Digital Identity Scotland System Context
@@ -252,10 +332,82 @@ sso <--> mysafe: "Access user claims and attributes for authentication"
 @enduml
 ```
 
-The Digital Identity Scotland service has a customer/supplier
-relationship with each enrolled public sector body. The public sector
-body is identified in this document as the **relying party**. Users
-(i.e. citizens of Scotland) will continue to be identified as **user**.
+This system context diagram provides an overview of the **Digital Identity Scotland (DIS)** ecosystem, its internal components, and interactions with external systems. The system enables citizens to access digital public services securely by supporting registration, authentication, identity verification, and consent management. The key components and their functions are described below:
+
+---
+
+### 1. **Actors**
+- **User**: A citizen seeking access to digital public services. They interact with the DIS system via the Relying Party (RP) and the Single Sign-On (SSO) component.
+- **Relying Party (RP)**: A digital public service provider that integrates with the DIS system to enable secure authentication and authorization for its protected resources.
+
+---
+
+### 2. **Digital Identity Scotland (DIS) Boundary**
+The DIS system is the core identity platform that manages user authentication, identity verification, and verified claims storage through three main components:
+1. **SSO (Single Sign-On)**:  
+    - Manages **authentication (Authn)** and **authorization (Authz)** for users and relying parties.
+    - Handles user journeys like Sign Up, Sign In, Account Recovery, and Consent Management.
+    - Interacts with internal systems such as MySafe and VYI, along with relying parties to manage OIDC flows and claims sharing.
+
+2. **MySafe**:  
+    - Acts as a secure vault for storing and managing user identity data and verified claims.
+    - Comprises three major services: 
+        1. **Issuer Service/UI**: Displays stored data, manages consent, and handles attribute requests.
+        2. **Locker Service**: Ensures secure storage of user-selected attributes.
+        3. **Account Management Service/UI**: Allows users to manage their attributes and sharing history.
+
+3. **VYI (Verify Your Identity)**:  
+    - Coordinates third-party services to verify user identity with a **medium level of assurance** in compliance with **GPG 45** (UK government identity verification standards).
+    - Communicates with external services (e.g., document verification, biometrics, and fraud checks), validates evidence, and ensures corroboration across multiple checks.
+
+---
+
+### 3. **External Systems Interacting with DIS**
+DIS interacts with several external systems to support identity verification, fraud detection, and communications:
+1. **Experian Cross-Core Gateway**: Serves as the integration hub for multiple external verification mechanisms:
+    - **ID Authenticate**: Validates name and address data, identifies inconsistencies, and calculates confidence levels.
+    - **Hunter**: Screens for fraudulent activity by analyzing user behavior and comparing against existing records.
+    - **Mitek**: Performs biometric checks and facial recognition using identity documents.
+    - **Identity IQ**: Uses knowledge-based verification (KBV) for challenge-response authentication.
+
+2. **Cifas**: Enhances fraud detection by checking for risks or misuse associated with a user's claimed identity using reciprocal fraud data sharing.
+
+3. **Via Europa**: Provides address lookup and validation against authoritative datasets to ensure accurate and consistent address data.
+
+4. **Vouchsafe**: Supports alternative identity verification methods (e.g., vouching or digital IDs) for users who cannot complete standard document- or knowledge-based checks.
+
+5. **Gov.UK Notify**: Sends notifications (e.g., SMS, email) to users during key account events (registration, recovery, one-time-password delivery).
+
+---
+
+### 4. **Internal DIS Relationships**
+- **SSO ↔ VYI**: The SSO hands off user data to VYI for identity verification, which then validates the identity through external systems before sending results back.
+- **VYI ↔ MySafe**: Upon successful verification, VYI securely stores verified claims in MySafe.
+- **SSO ↔ MySafe**: The SSO retrieves and manages user claims stored in MySafe for authentication, authorization, and consent management.
+
+---
+
+### 5. **Key Workflows**
+1. **User Authorization**:
+   - The user accesses a protected resource via the RP, which redirects authorization requests to DIS.
+   - The DIS SSO handles authentication and authorization, ensuring secure access to requested resources.
+   
+2. **Identity Verification**:
+   - If claims are unavailable in MySafe, the VYI processes identity verification requests by orchestrating checks through external systems (e.g., Experian, Mitek, Cifas).
+
+3. **Consent Management**:
+   - DIS ensures users have control over their data:
+     - **Consent to Store**: Users approve storing verified claims in MySafe after successful identity verification.
+     - **Consent to Share**: Users decide which verified claims to share with the relying party during the OIDC flow.
+
+4. **Fraud Detection**:
+   - External systems (e.g., Hunter, Cifas) help detect and prevent fraudulent activity through behavioral analysis, data corroboration, and shared fraud intelligence.
+
+---
+
+### 6. **Summary**
+The Digital Identity Scotland system provides a centralized, secure, and user-focused platform for managing digital identity. By integrating powerful identity verification mechanisms, secure claim storage, and robust consent management, DIS ensures compliance with privacy and security standards while granting users granular control over their identity data. The architecture enhances trust and accessibility for public services.  
+
 
 ## Container View
 
