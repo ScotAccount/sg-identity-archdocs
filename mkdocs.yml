@@ -28,7 +28,10 @@ nav:
       - ScotAccount: scotaccount.md
       - VerifyYourIdentity: verifyyouridentity.md
       - MySafe: mysafe.md
-   - Integrations:
+   - Interfaces:
       - Cifas: cifas.md
+      - KBV System Context: kbv-system-context.md
+      - KBV HLD: kbv-hld.md
+
    - Platform:
       - SG Workspaces Service: sgworkspaces.md

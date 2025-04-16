@@ -1,0 +1,78 @@
+@startuml vouchsafe-user-journey
+
+actor "User (Browser)" as User
+participant "VYI (Verify Your Identity)" as VYI
+participant "Vouchsafe API" as Vouchsafe
+participant "ScotAccount" as ScotAccount
+participant "Relying Party (RP)" as RP
+
+== User Prompted for Verification ==
+User -> VYI: Access verification process
+VYI -> User: Display message: "Verify your identity by asking someone to vouch for you."
+
+User -> VYI: Click "Continue to Vouchsafe"
+
+== Vouchsafe Verification Creation ==
+VYI -> Vouchsafe: Request verification via API
+note right of Vouchsafe
+Data sent:
+- email
+- workflow_id
+- redirect_url (optional)
+end note
+
+Vouchsafe --> VYI: Respond with verification url, id and expires_at
+note left of VYI
+Response:
+- id
+- email
+- redirect_url
+- status (Created)
+- verification_method
+- created_at
+- expires_at
+- workflow_id
+- external_id
+end note
+
+VYI -> User: Redirect Browser to Vouchsafe URL
+User -> Vouchsafe: Begin vouching process
+
+== User Verification Process ==
+Vouchsafe -> Vouchsafe: Process user verification
+Vouchsafe -> VYI: (Optional Webhook alert for status updates)
+note right
+Webhook will not be used.
+Polling will be used instead.
+end note
+
+== Polling for Verification Status ==
+loop Periodic Status Check
+  VYI -> Vouchsafe: Check verification status
+  Vouchsafe --> VYI: Return latest status
+  note left
+  Possible statuses:
+  - Created
+  - UserCompleted
+  - Verified
+  - Refused
+  - Alert
+  end note
+end loop
+
+== Status Check Completion ==
+alt User is Verified
+  VYI -> User: Send email notification to login and complete the process
+else User is Refused
+  VYI -> User: Send email notification to login and complete the process
+end
+
+== User Shares Verified Credentials ==
+User -> ScotAccount: Return to ScotAccount to complete process
+note right of User
+User logs in and shares their 
+verified credentials.
+end note
+
+ScotAccount -> RP: Share verified credentials with RP
+@enduml
