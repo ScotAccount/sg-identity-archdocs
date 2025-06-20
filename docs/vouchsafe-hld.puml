@@ -112,6 +112,29 @@ AWSCloudGroup(cloud) {
               - Key is managed for limiting access to MySafe service.
             end note
         }
+
+        ' Add WAF and ALB for incoming traffic to ScotAccount
+        WAF(waf, "AWS WAF", "")
+        ElasticLoadBalancingApplicationLoadBalancer(alb, "Application Load Balancer", "")
+
+        note top of waf #Beige
+          **AWS WAF**:
+          - Protects against common web exploits.
+          - Filters incoming traffic to ScotAccount.
+          - Allow lists traffic from the Vouchsafe API.
+        end note
+
+        note top of alb #Beige
+          **Application Load Balancer**:
+          - Distributes incoming traffic to ScotAccount.
+          - Ensures high availability and fault tolerance.
+          - Allow lists traffic from the Vouchsafe API.
+        end note
+
+        ' Connections for WAF and ALB
+        vouchsafeApi --> waf : "HTTPS/Rest/JSON\nvia <&globe> Internet"
+        waf --> alb : "HTTPS/Rest/JSON"
+        alb --> scotaccount : "HTTPS/Rest/JSON\nvia Kubernetes Virtual Network"
     }
 }
 
@@ -128,8 +151,5 @@ vyi --> squid : "HTTPS/Rest/JSON\nvia Squid Proxy"
 
 ' Squid Proxy communicates with the external Vouchsafe API
 squid --> vouchsafeApi : "HTTPS/Rest/JSON\nvia <&globe> Internet"
-
-' Vouchsafe communicates with the ScotAccount as relying party
-vouchsafeApi --> scotaccount : "HTTPS/Rest/JSON\nvia <&globe> Internet"
 
 @enduml

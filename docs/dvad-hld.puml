@@ -1,0 +1,72 @@
+@startuml dvad-hld
+' Uncomment the line below for "dark mode" styling
+'!$AWS_DARK = true
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v17.0/dist
+!define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!includeurl KubernetesPuml/kubernetes_Common.puml
+!includeurl KubernetesPuml/kubernetes_Context.puml
+!includeurl KubernetesPuml/kubernetes_Simplified.puml
+!includeurl KubernetesPuml/OSS/KubernetesPod.puml
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/AWSSimplified.puml
+!include AWSPuml/EndUserComputing/all.puml
+!include AWSPuml/General/all.puml
+!include AWSPuml/Groups/all.puml
+!include AWSPuml/NetworkingContentDelivery/all.puml
+!include AWSPuml/Analytics/all.puml
+!include AWSPuml/Database/all.puml
+!include AWSPuml/Storage/all.puml
+!include AWSPuml/ApplicationIntegration/all.puml
+!include AWSPuml/Compute/all.puml
+!include AWSPuml/SecurityIdentityCompliance/all.puml
+!include AWSPuml/Containers/all.puml
+hide stereotype
+skinparam linetype polyline
+' External Service Icon for Identity IQ
+together {
+  Boundary(hmpo, "HMPO") {
+      rectangle "DVAD API" as dvadApi        
+  }
+  note right of dvadApi #Beige
+    **DVAD API**:
+    - Restful API, enabling client:
+        - to validate a passport.
+        - know if a passport has been cancelled. 
+	    - know if a passport has been lost / stolen. 
+  end note
+
+  note bottom of dvadApi #Beige
+    **DVAD API**:
+    - Secured via Client ID and Secret.
+    - Requests require bearer token, which is obtained via a pre-authentication step.
+    - mTLS is used for secure communication. 
+    - Client IPs are whitelisted by DVAD.
+  end note
+}
+AWSCloudGroup(cloud) {
+    AWSAccountGroup(build, "Digital_Identity-Production (Strategic Cloud Platform)") {
+        Cluster_Boundary(eks, "EKS Cluster") {
+            KubernetesPod(vyi, "VYI Service", "")
+            note top of vyi #Beige
+              **VYI Service**:
+              - Verifies user's identity using external services.
+              - Communicates with DVAD API via Squid Proxy.
+             end note
+        }
+        Cluster_Boundary(ecs, "ECS Cluster") {
+            ElasticContainerService(squid, "Squid Proxy", "")
+            note top of squid #Beige
+              **Squid Proxy**:
+              - Manages outbound internet traffic.
+              - Allows access to DVAD API by whitelisting domains.
+              - Ensures controlled and secure communication to external web services.
+            end note
+        }
+    }
+}
+' Connections for internal services
+vyi --> squid : "HTTPS/Rest/JSON\nvia Squid Proxy"
+' Squid Proxy communicates with the external DVAD API
+squid --> dvadApi : "HTTPS/Rest/JSON\nvia <&globe> Internet"
+@enduml

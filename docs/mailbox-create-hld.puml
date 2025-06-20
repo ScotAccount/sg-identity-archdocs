@@ -1,0 +1,146 @@
+@startuml mailbox-create-hld
+' Uncomment the line below for "dark mode" styling
+'!$AWS_DARK = true
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v17.0/dist
+!define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+
+!includeurl KubernetesPuml/kubernetes_Common.puml
+!includeurl KubernetesPuml/kubernetes_Context.puml
+!includeurl KubernetesPuml/kubernetes_Simplified.puml
+!includeurl KubernetesPuml/OSS/KubernetesPod.puml
+
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/AWSSimplified.puml
+!include AWSPuml/EndUserComputing/all.puml
+!include AWSPuml/General/all.puml
+!include AWSPuml/Groups/all.puml
+!include AWSPuml/NetworkingContentDelivery/all.puml
+!include AWSPuml/Analytics/all.puml
+!include AWSPuml/Database/all.puml
+!include AWSPuml/Storage/all.puml
+!include AWSPuml/ApplicationIntegration/all.puml
+!include AWSPuml/Compute/all.puml
+!include AWSPuml/SecurityIdentityCompliance/all.puml
+!include AWSPuml/Containers/all.puml
+
+hide stereotype
+skinparam linetype polyline
+
+' External Service Icon for Identity IQ
+together {
+  Boundary(vouchsafe, "Mailbox") {
+      rectangle "Mailbox API" as mailboxApi        
+  }
+
+  note top of mailboxApi #Beige
+    **Mailbox API**:
+    - Mailbox acts as relying party for authentication and IDV.
+    - Undertakes a standard OIDC flow via ScotAccount
+  end note
+
+  note bottom of mailboxApi #Beige
+    **Mailbox API**:
+    - Restful API, enabling ScotAccount to request a new mailbox.
+    - Secured via Client ID and Secret.
+    - Requests require bearer token, which is obtained via a pre-authentication step.
+    - Returns mailbox id.
+  end note
+}
+
+
+AWSCloudGroup(cloud) {
+    AWSAccountGroup(build, "Digital_Identity-Production (Strategic Cloud Platform)") {
+        Cluster_Boundary(eks, "EKS Cluster") {
+            KubernetesPod(vyi, "VYI Service", "")
+            KubernetesPod(scotaccount, "ScotAccount", "") 
+            KubernetesPod(mysafe, "MySafe", "") 
+            
+            note bottom of vyi #Beige
+              **VYI Service**:
+              - Verifies user's identity using external services.
+             end note
+
+            note left of scotaccount #Beige
+              **ScotAccount Service**:
+              - Authenticates and authorizes users. 
+              - Delegates to VYI for verification journey.
+              - One-time creation of a new mailbox associated with the account.
+              - Uses DynamoDB to store mailbox id alongside the other account details.
+            end note
+
+            note top of mysafe #Beige
+              **MySafe Service**:
+              - Secure vault for storing user identity data and claims.
+              - Triggers the creation of a mailbox on a successful gpg45.medium journey.
+            end note
+        }
+
+        Cluster_Boundary(ecs, "ECS Cluster") {
+            ElasticContainerService(squid, "Squid Proxy", "")
+
+            note top of squid #Beige
+              **Squid Proxy**:
+              - Manages outbound internet traffic.
+              - Allows access to Experian's Identity IQ and WASP API by whitelisting domains.
+              - Ensures controlled and secure communication to external web services.
+            end note
+        }
+
+        ' Add WAF and ALB for incoming traffic to ScotAccount
+        WAF(waf, "AWS WAF", "")
+        ElasticLoadBalancingApplicationLoadBalancer(alb, "Application Load Balancer", "")
+
+        note top of waf #Beige
+          **AWS WAF**:
+          - Protects against common web exploits.
+          - Filters incoming traffic to ScotAccount.
+          - Allow lists traffic from the Vouchsafe API.
+        end note
+
+        note top of alb #Beige
+          **Application Load Balancer**:
+          - Distributes incoming traffic to ScotAccount.
+          - Ensures high availability and fault tolerance.
+          - Allow lists traffic from the Mailbox API.
+        end note
+
+       ' Connections for WAF and ALB
+        mailboxApi --> waf : "HTTPS/Rest/JSON\nvia <&globe> Internet"
+        waf --> alb : "HTTPS/Rest/JSON"
+        alb --> scotaccount : "HTTPS/Rest/JSON\nvia Kubernetes Virtual Network"
+
+        ' Add DynamoDB for storing claims
+        DynamoDB(dynamoDb, "DynamoDB", "")
+
+        note bottom of dynamoDb #Beige
+          **DynamoDB**:
+          - Persistent store of account details (DIS_SSO table).
+          - Associated mailbox id with ScotAccount id.
+          - Database table is server-side encrypted at rest using AWS owned KMS key.
+        end note
+
+        ' Add KMS for encryption of account details 
+        KeyManagementService(kms, "KMS", "") 
+
+        note bottom of kms #Beige
+          **KMS**:
+          - Used for server-side encryption of DynamoDb data using AWS owned KMS key.
+        end note
+
+    }
+}
+
+' Connections for internal services
+scotaccount --> vyi : "HTTP/REST/JSON\nvia Kubernetes Virtual Network"
+mysafe --> scotaccount : "HTTP/REST/JSON\nvia Kubernetes Virtual Network"
+scotaccount --> dynamoDb : "HTTPS\nvia AWS Network"
+dynamoDb --> kms : "HTTPS\nvia AWS Network"
+
+' ScotAccount communicates with Squid Proxy
+scotaccount --> squid : "HTTPS/Rest/JSON\nvia Squid Proxy"
+
+' Squid Proxy communicates with the external Vouchsafe API
+squid --> mailboxApi : "HTTPS/Rest/JSON\nvia <&globe> Internet"
+
+@enduml
