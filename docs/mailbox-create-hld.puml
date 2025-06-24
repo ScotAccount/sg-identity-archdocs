@@ -29,7 +29,7 @@ skinparam linetype polyline
 
 ' External Service Icon for Identity IQ
 together {
-  Boundary(vouchsafe, "Mailbox") {
+  Boundary(mailbox, "Mailbox") {
       rectangle "Mailbox API" as mailboxApi        
   }
 
@@ -83,7 +83,7 @@ AWSCloudGroup(cloud) {
             note top of squid #Beige
               **Squid Proxy**:
               - Manages outbound internet traffic.
-              - Allows access to Experian's Identity IQ and WASP API by whitelisting domains.
+              - Allows access to Mailbox API by whitelisting domains.
               - Ensures controlled and secure communication to external web services.
             end note
         }
@@ -96,7 +96,7 @@ AWSCloudGroup(cloud) {
           **AWS WAF**:
           - Protects against common web exploits.
           - Filters incoming traffic to ScotAccount.
-          - Allow lists traffic from the Vouchsafe API.
+          - Allow lists traffic from the Mailbox API.
         end note
 
         note top of alb #Beige
@@ -141,7 +141,7 @@ dynamoDb --> kms : "HTTPS\nvia AWS Network"
 ' ScotAccount communicates with Squid Proxy
 scotaccount --> squid : "HTTPS/Rest/JSON\nvia Squid Proxy"
 
-' Squid Proxy communicates with the external Vouchsafe API
+' Squid Proxy communicates with the external mailbox API
 squid --> mailboxApi : "HTTPS/Rest/JSON\nvia <&globe> Internet"
 
 @enduml
