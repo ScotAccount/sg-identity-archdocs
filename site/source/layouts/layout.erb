@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= current_page.data.title || "My Site" %></title>
+    <!-- External stylesheets -->
+    <link rel="stylesheet" href="https://blogs.gov.scot/wp-content/themes/scotgov_theme_2016/css/normalize.css">
+    <link rel="stylesheet" href="https://blogs.gov.scot/wp-content/themes/scotgov_theme_2016/css/slick.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900,400italic" rel="stylesheet" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://blogs.gov.scot/wp-content/themes/scotgov_theme_2016/style.css">
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>
