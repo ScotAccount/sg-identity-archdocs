@@ -28,11 +28,3 @@ jobs:
           force_orphan: true
           keep_files: false
           commit_message: 'Deploy Archdocs website'
-
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v4
-#        with:
-#          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsS3DeployRole
-#          aws-region: us-east-1 # Replace with your bucket’s region
-#      - name: Deploy to S3
-#        run: bundle exec middleman s3_sync
