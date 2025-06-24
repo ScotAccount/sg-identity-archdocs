@@ -10,3 +10,7 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :x64_mingw, :jruby]
 
 # Include the tech docs gem
 gem 'govuk_tech_docs'
+
+# Include the s3 gems to support deployment to AWS S3
+gem 'middleman-dotenv'
+gem 'middleman-s3_sync'

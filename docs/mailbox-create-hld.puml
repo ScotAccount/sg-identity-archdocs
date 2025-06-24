@@ -44,6 +44,7 @@ together {
     - Restful API, enabling ScotAccount to request a new mailbox.
     - Secured via Client ID and Secret.
     - Requests require bearer token, which is obtained via a pre-authentication step.
+    - IP allow listing is used to restrict access to the API.
     - Returns mailbox id.
   end note
 }

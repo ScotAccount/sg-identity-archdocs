@@ -21,7 +21,10 @@ RUN bundle install
 # Build the application
 RUN bundle exec middleman build --verbose
 
+# Sync to S3 bucket
+RUN bundle exec middleman s3_sync --verbose
+
 # Copy the resulting code to the nginx container
-FROM nginx:1.25.3-alpine
-RUN rm -rf /usr/share/nginx/html
-COPY --from=middleman-builder /app/build /usr/share/nginx/html
+#FROM nginx:1.25.3-alpine
+#RUN rm -rf /usr/share/nginx/html
+#COPY --from=middleman-builder /app/build /usr/share/nginx/html
