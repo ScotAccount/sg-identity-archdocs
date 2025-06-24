@@ -15,7 +15,19 @@ jobs:
           ruby-version: '3.1' # Adjust to your Ruby version
           bundler-cache: true
       - name: Build Middleman site
-        run: bundle exec middleman build --build-dir=site
+        run: |
+          cd site 
+          bundle exec middleman build --clean --verbose --build-dir=../site-build
+      - name: Upload to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:   
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site-build
+          publish_branch: gh-pages
+          force_orphan: true
+          keep_files: false
+          commit_message: 'Deploy Archdocs website'
+
 #      - name: Configure AWS Credentials
 #        uses: aws-actions/configure-aws-credentials@v4
 #        with:
