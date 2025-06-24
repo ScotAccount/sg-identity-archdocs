@@ -17,6 +17,7 @@ jobs:
       - name: Build Middleman site
         run: |
           cd site 
+          bundle install
           bundle exec middleman build --clean --verbose --build-dir=../site-build
       - name: Upload to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
