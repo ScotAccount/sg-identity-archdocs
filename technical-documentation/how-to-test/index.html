@@ -1,0 +1,99 @@
+<h1 id="section-5---how-to-test">Section 5 - How to Test</h1>
+
+<p>We provide the following features:</p>
+
+<ul>
+  <li>
+    <p>Manual Testing</p>
+  </li>
+  <li>
+    <p>Automated Testing</p>
+  </li>
+  <li>
+    <p>Sample Clients</p>
+  </li>
+</ul>
+
+<h3 id="manual-testing"><strong>Manual Testing</strong></h3>
+
+<p>We provide a Demo Relying Party application, that you can manually use
+to test:</p>
+
+<ul>
+  <li>
+    <p>Authentication</p>
+  </li>
+  <li>
+    <p>Identity verification</p>
+  </li>
+</ul>
+
+<p>It can be accessed from the link
+<a href="https://oidc-private-client.swan.sign-in.service.gov.scot/integration">https://oidc-private-client.swan.sign-in.service.gov.scot/integration</a></p>
+
+<h3 id="automated-testing---mock-service"><strong>Automated Testing - Mock Service</strong></h3>
+
+<p>We provide a Mock Service that can be used to test:</p>
+
+<ul>
+  <li>
+    <p>Authentication</p>
+  </li>
+  <li>
+    <p>Identity verification</p>
+  </li>
+</ul>
+
+<p>This provides an easy way to test our identity verification capability
+without having to supply real information or documentation such as name
+/ address / copies of documents such as passport.</p>
+
+<p>It can be accessed from the link
+<a href="https://mock-dis.main.swan.sign-in.service.gov.scot/">https://mock-dis.main.swan.sign-in.service.gov.scot</a></p>
+
+<p>NOTE: There are a few points to note and differences to remember.</p>
+
+<ul>
+  <li>
+    <p>Paul Wallis: Can be used for either scope, will pass gpg-45-medium
+identity verification</p>
+  </li>
+  <li>
+    <p>Brian Harle: Can be used for either scope, will fail gpg-45-medium
+verification</p>
+  </li>
+  <li>
+    <p>Value of code_challenge isn’t validated</p>
+  </li>
+  <li>
+    <p>Value of client_id isn’t validated</p>
+  </li>
+  <li>
+    <p>Prompt &amp; nonce are out of scope for the mock and therefore ignored</p>
+  </li>
+  <li>
+    <p>The returned auth code is hardcoded for the 2 people available in
+this mock</p>
+  </li>
+  <li>
+    <p>Value of code_verifier isn’t validated</p>
+  </li>
+  <li>
+    <p>Value of sub &amp; iss (client id) and aud in the JWT aren’t validated</p>
+  </li>
+  <li>
+    <p>Value of sub &amp; iss (client id) and aud in the DIS-Client-Assertion
+aren’t validated</p>
+  </li>
+</ul>
+
+<h3 id="sample-client"><strong>Sample Client</strong></h3>
+
+<p>We have also provided a working sample Relying Party application, that
+is the same as the one that you can use for Manual Testing.</p>
+
+<p>It can be accessed from the link:
+<a href="https://github.com/sg-digital-identity-scotland/sso-oidc-client/tree/main/sample-client">https://github.com/sg-digital-identity-scotland/sso-oidc-client/tree/main/sample-client</a></p>
+
+<p>NOTE: Our Sample Application is NOT to be used in production or intended
+as production grade code.</p>

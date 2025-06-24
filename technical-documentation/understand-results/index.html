@@ -1,0 +1,487 @@
+<h1 id="section-4---understand-results">Section 4 - Understand Results</h1>
+
+<h2 id="understanding-the-response-for-token">Understanding the response for /token</h2>
+
+<p>Example Response</p>
+
+<p>{</p>
+
+<p>“access_token”:
+“eyJraWQiOiJXZ2lHIiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0ZjY4OTNmNC02ZmJlLTQyM2UtYTVjYy1kM2M5M2U1YTdjNDEiLCJzY3AiOlsib3BlbmlkIl0sImlzcyI6Imh0dHBzOi8vYXV0aHouc3dhbi5zaWduLWluLnNlcnZpY2UuZ292LnNjb3QiLCJleHAiOjE2Nzg5MzI2NjIsImlhdCI6MTY3ODkzMTc2MiwianRpIjoiekY4Q1VQRC10ZVkiLCJjaWQiOiI1eWh5Z2tzY3R3cHFnIn0.LiE0ocHRkXNINwwxol4XrKqYMuafZ2-gSP1S2huPam-anV9uxMxvbm7W6pvWe8n2mOUsxFDQVNgVP8OuoFuMj-nhWvm5ZornnACmHS1g0MkECOabQmnYrmqcWJesYvrlMRccrie20ZM34_wALQYL2xgtKNBBaUaD6rTmjiKU3TGgX2q7b71A72YqA9stxQjBocjjWcJuXHrbt_qmyuiS2SVniRvmOXnukpiGPLIBZshJGm3SpZiAknfrlo7EQCQUru9NHuj9DYf1wxoRYzZh8nYLXvAm7lzxkVvH1AhhHoj2TAF6YXvMOZPRC7PSrc9hOxYz3xJkOZnQmfyucyh8-Q”,</p>
+
+<p>“refresh_token”:
+“eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..vnC6Aa6eIzxwHxP1eIk2rA.4or8EM0wJZfj0-w3YfjK-pz97Iysa57njT7UDuGJKa3TkFxgs1sCws9zWfYjuEK7KU_j8spLc50ngaSGQaqq23z2T-suL-B0JC949Exl_-48zPEBiQCqsBEKo338973xMm7_Arvp86aQQDQ7i5KTSd05vXqA7YCW7WCEgIG1k93JPsY0pp70NSBqPP-wpCu914yPkXTvQlte5TbyoVpH89mafQg4oyfvzQT2NBtMOC_LoeOImSOKuD0dLCNmgrsXn5CrcXLfquk8bTR283G2qE9AguphWGjm3hWIqVhXuCgZo7AsBkPxbsnt0oIQ7UuD3ZH_n7qRagiC9rOuBdYgmNaYfAYRtpEujVXB8GnwMniSgn0iyB8-tf-x3Gs8ihQe8x-dwOXwMMrXXrM11Wnevh2ZOr8TQoh4f_JHXmy7OdvcqaRTa2JzEre9gy1vSevkK6lPbCV1IeD1oIPkJk3A7FKNrWlVS5w0uJa1KaItVrQtrFrhgMHwGIqkVcWNQ-ZEnvRCRqoFzt812m6jUHchpxlFHFiiQ58kfIl6UyH9_vc8pSONMxQbgoBJftLKR0JqxHU3pTpmIjPupLxMl3YMDIdLGPmemK8pmPbHB9zvCq4eR7HiiYsb5JweBxOUaPlNCdkjj1MT30q56tldEoila_mk5V75Dj3U5EhqpRlyFYTLSzPHRjBnjlrGTb8FqZ6zSNC8JZ_U4q2LWkJge4RT2riOIC1yLmfy2K1NflNKi99P5CGzuzmavX3Yv9usqK_3CKnTPOAbtIR9lJO4eBz6uxsaB7JTp_ASxhG96OIkuupph4OvLuPVX8vX6f0i05Ay5Xa0b2-7WBR-i9m7VjUoFUCH4m2HwSzp30oOmQw_n0nT7tM_1_mXDd95StbKavkb9Yjdzg6BVA5Ux9eKU-WrF05rB9YLT5u1E4M3cNA7XCpvR935O1Hty-Z7_U58MGG2SPYKlquTjtHPV4v7Kb3M_Astr8OzDiR3Rw4q59Xd8Ak.Y4pYS8iU7Jft6ay6yywpig”,</p>
+
+<p>“scope”: “openid”,</p>
+
+<p>“id_token”:
+“eyJraWQiOiJXZ2lHIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0ZjY4OTNmNC02ZmJlLTQyM2UtYTVjYy1kM2M5M2U1YTdjNDEiLCJhdWQiOiI1eWh5Z2tzY3R3cHFnIiwiaXNzIjoiaHR0cHM6Ly9hdXRoei5zd2FuLnNpZ24taW4uc2VydmljZS5nb3Yuc2NvdCIsImV4cCI6MTY3ODkzMjY2MiwiaWF0IjoxNjc4OTMxNzYyLCJub25jZSI6IkJkSExEV1BSbVk4V0JZTjZCRXRGZkkyUlZvSm15Q1JwcEdGSXQyaEd5N0EiLCJqdGkiOiJmUF9XXzJ3NjVpVSIsInNpZCI6Inl4WjJWcE9ueWRWMENUOGoxU2JsZnp0UllEcmtxLVNKM09IN2VqRjdHUWcifQ.db79iKccqKkXF4MF2IThOV05AZHrlvmNZWAW5ojUzyQoKzHSlPtCEeC3sqwsah84gHMqU0A9ACWPbE8SECdpzOvL6QVCfoWjwuiMEzMsOZvCHccMEpeNX8rbB7_L5Mo5lLOpVl80jIezKNQJ8NMQoOgMGaBm5qkgLTVFuYqVnvpzAEb44xDeSYe7__jaXOUBiGIWMqopeqJRmR1cy5yJ9ShqDa_xoBVmAxXXXv0ZOanE7E7-LCBApdvFNRA-JUUrjMIYUNn8cSkupye6bjLElLT_qPKJc6N0mSOhH43oU5GB-heMhNX18p-07J5pFFAHotcP6VsA2mE7y96gLQ1XrA”,</p>
+
+<p>“token_type”: “Bearer”,</p>
+
+<p>“expires_in”: 900</p>
+
+<p>}</p>
+
+<p><u>You can use the following table to understand the ID Token’s
+claims.</u></p>
+
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 84%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Claim</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>access_token</td>
+<td>Access tokens are used in token-based authentication to allow an
+application to access an API.</td>
+</tr>
+<tr class="even">
+<td>refresh_token</td>
+<td>A refresh token is a mechanism to receive a new access token when
+the old one expires</td>
+</tr>
+<tr class="odd">
+<td>scope</td>
+<td>Scope is a mechanism in OAuth 2.0 to limit an application's access
+to a user's account</td>
+</tr>
+<tr class="even">
+<td>id_token</td>
+<td>ID tokens are used in token-based authentication to cache user
+profile information and provide it to a client application</td>
+</tr>
+<tr class="odd">
+<td>token_type</td>
+<td>The type of token this is, typically just the string “Bearer”.</td>
+</tr>
+<tr class="even">
+<td>expires_in</td>
+<td>The time the token is valid for.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="understanding-the-id-token">Understanding the ID Token</h2>
+
+<p>A id_token is return to the user after successful authentication has
+happened.</p>
+
+<p><u>Example Token</u></p>
+
+<p>eyJraWQiOiJXZ2lHIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0ZjY4OTNmNC02ZmJlLTQyM2UtYTVjYy1kM2M5M2U1YTdjNDEiLCJhdWQiOiIyZnM0NmpvdjNjbTRhIiwiaXNzIjoiaHR0cHM6Ly9hdXRoei5zd2FuLnNpZ24taW4uc2VydmljZS5nb3Yuc2NvdCIsImV4cCI6MTY3Njc3NTkwOSwiaWF0IjoxNjc2Nzc1MDA5LCJub25jZSI6IjIwM0pzTm9fMExqejBUVl9LZkZPQUFINm55bV9aYWlRempvZHZhcGVfR00iLCJqdGkiOiJqSkgzd3N0TWJ1cyIsInNpZCI6IlNiOGdwbkQ5MGhUS3hQOGZIRWRhYVFmRTdhSUhzREJHWXYzYjhZMW1KckUifQ.UZX9LFhTfwTwT-bnVMcbvG2KRFCBfdz6oVPPf1aP2eNKC9YKMKgH2jb7DCbdOdNNVaNGayADSwMA9DJhCN1Qa8KvdbGK79AR2N4jxfGFzIdS4FkLlTIRp5oX2J8PWKnqc_Z4dC-D70rffQVokic1LxHQInxtz3n21_TPhxwOwbBRKBMbDpnoL-5qERg10MsBDaJJdctjoa8h6AGE6sJF-GZQhEVaHx-ESut0E0Ul18Tgfklx-evRjAHBxoJfh98m3d4obV_7FKu79_qMM1TOx3T3EaJMlBsYP6munM-jZR9-Z9VBEg2UaLx4XWBCAsV6Wvn2jFuSRpDwL2hhuRKE6A</p>
+
+<p><u>Example Token - Decoded by</u> <a href="http://jwt.io">http://jwt.io</a></p>
+
+<p>{</p>
+
+<p>“sub”: “4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41”,</p>
+
+<p>“aud”: “2fs46jov3cm4a”,</p>
+
+<p>“iss”: “https://authz.swan.sign-in.service.gov.scot”,</p>
+
+<p>“exp”: 1676775909,</p>
+
+<p>“iat”: 1676775009,</p>
+
+<p>“nonce”: “203JsNo_0Ljz0TV_KfFOAAH6nym_ZaiQzjodvape_GM”,</p>
+
+<p>“jti”: “jJH3wstMbus”,</p>
+
+<p>“sid”: “Sb8gpnD90hTKxP8fHEdaaQfE7aIHsDBGYv3b8Y1mJrE”</p>
+
+<p>}</p>
+
+<p>NOTE: ScotAccount’s privacy principles prevent us from supplying any
+personal information, as part of the Authentication process.</p>
+
+<p>We only provide a UUID as part of the “sub” claim that is immutable and
+can be used as a reference point. We do NOT provide e.g. email address
+or mobile no as part of the Authentication process.</p>
+
+<p>Once the user has been through Identity Verification, there is an API
+/attribute/values to use to receive certain Verified Data.</p>
+
+<p><u>You can use the following table to understand the ID Token’s
+claims.</u></p>
+
+<table>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 91%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Claim</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sub</td>
+<td>The subject identifier or the unique ID of a user (UUID).</td>
+</tr>
+<tr class="even">
+<td>aud</td>
+<td>The audience, which will be the client_id you were assigned during
+onboarding.</td>
+</tr>
+<tr class="odd">
+<td>iss</td>
+<td>The ScotAccount OpenID Provider’s Issue identifier as specified in
+the <a href="https://authz.swan.sign-in.service.gov.scot/.well-known/openid-configuration">discovery
+endpoint</a>.</td>
+</tr>
+<tr class="even">
+<td>exp</td>
+<td>exp means ‘expiration time’. This is the expiration time for this
+token, which will be an integer timestamp representing the number of
+seconds since the <a href="https://www.epochconverter.com/">Unix
+Epoch</a>.</td>
+</tr>
+<tr class="odd">
+<td>iat</td>
+<td>iat stands for ‘issued at’. This identifies the time at which
+ScotAccount created the JWT. You can use this claim to understand the
+age of the JWT.<br />
+This will appear as an integer timestamp representing the number of
+seconds since the <a href="https://www.epochconverter.com/">Unix
+Epoch</a>.</td>
+</tr>
+<tr class="even">
+<td>nonce</td>
+<td>The nonce value your application provided when you made the
+authorisation request.</td>
+</tr>
+<tr class="odd">
+<td>jti</td>
+<td>The "jti" (JWT ID) claim provides a unique identifier for the
+JWT</td>
+</tr>
+<tr class="even">
+<td>sid</td>
+<td>sid claim is defined in Front-Channel Logout 1.0 is for its use as a
+parameter for frontchannel_logout_uri</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="understanding-the-access-token">Understanding the Access Token</h2>
+
+<p>A access_token is return to the user after they make a call to /token
+end point.</p>
+
+<p><u>Example Access Token</u></p>
+
+<p>eyJraWQiOiJXZ2lHIiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI0ZjY4OTNmNC02ZmJlLTQyM2UtYTVjYy1kM2M5M2U1YTdjNDEiLCJzY3AiOlsib3BlbmlkIl0sImlzcyI6Imh0dHBzOi8vYXV0aHouc3dhbi5zaWduLWluLnNlcnZpY2UuZ292LnNjb3QiLCJleHAiOjE2NzY3NzU5MTAsImlhdCI6MTY3Njc3NTAxMCwianRpIjoicm9UekozM1RGZTgiLCJjaWQiOiIyZnM0NmpvdjNjbTRhIn0.fZtNE4GJRtYopKrHO4-Jau8lrNB5PyS0uz73gNlIH25aik9bNHX59PfNgnPdlgKF_LZFJmJFk7KytDldx21B1KIjseZwjprVQ0G_0crQ2rx8zdkig1bewggT-zsDxl0mpK05ERfmxeXdAL-entluGLtqqDmyXVF4C8ortKeWeNVwa0GgkA4mLunE4vQzQtJ_nBr3_D8Lq7OBScd-3iloj8tiKoKn0VQRctrUwc5IBfgV7DaPDBdqP1-tez1bzcb5l62ext43AaLwcuWEBlev1rHqqGbedx0Orrq8XMAftjna0Qa0mka_J2QdVYxbIbIZbTddrjIMgratJcj8dFU3Ww</p>
+
+<p><u>Example Access Token - Decoded by</u> <a href="http://jwt.io/">jwt.io</a></p>
+
+<p>{</p>
+
+<p>“sub”: “4f6893f4-6fbe-423e-a5cc-d3c93e5a7c41”,</p>
+
+<p>“scp”: [ “openid” ],</p>
+
+<p>“iss”: “https://authz.swan.sign-in.service.gov.scot”,</p>
+
+<p>“exp”: 1676775910,</p>
+
+<p>“iat”: 1676775010,</p>
+
+<p>“jti”: “roTzJ33TFe8”,</p>
+
+<p>“cid”: “2fs46jov3cm4a”</p>
+
+<p>}</p>
+
+<p><u>You can use the following table to understand the access token’s
+claims</u></p>
+
+<table>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 91%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Claim</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sub</td>
+<td>The subject identifier or the unique ID of a user (UUID).</td>
+</tr>
+<tr class="even">
+<td>scp</td>
+<td>Lists the scopes that have been consented for release by our
+Attribute Server.</td>
+</tr>
+<tr class="odd">
+<td>iss</td>
+<td>The ScotAccount OpenID Provider’s Issue identifier as specified in
+the <a href="https://authz.swan.sign-in.service.gov.scot/.well-known/openid-configuration">discovery
+endpoint</a>.</td>
+</tr>
+<tr class="even">
+<td>exp</td>
+<td>exp means ‘expiration time’. This is the expiration time for this
+token, which will be an integer timestamp representing the number of
+seconds since the <a href="https://www.epochconverter.com/">Unix
+Epoch</a>.</td>
+</tr>
+<tr class="odd">
+<td>iat</td>
+<td>iat stands for ‘issued at’. This identifies the time at which
+ScotAccount created the JWT. You can use this claim to understand the
+age of the JWT.<br />
+This will appear as an integer timestamp representing the number of
+seconds since the <a href="https://www.epochconverter.com/">Unix
+Epoch</a>.</td>
+</tr>
+<tr class="even">
+<td>jti</td>
+<td>jti stands for ‘JWT ID’ and it’s a unique identifier that can
+prevent the token being reused.</td>
+</tr>
+<tr class="odd">
+<td>cid</td>
+<td>Client identifier of the OIDC client that requested this token, this
+will be the Client ID assigned to you during onboarding.</td>
+</tr>
+</tbody>
+</table>
+
+<p> </p>
+
+<h2 id="understanding-results-for-get-verified-data">Understanding Results for Get Verified Data</h2>
+
+<p>A signed_jwt is return to the user after they have gone through
+successful identity verification , and they have used the
+/attribute/value endpoint to receive their data.</p>
+
+<p><u>Example signed JWT</u></p>
+
+<p>eyJraWQiOiJkTVZEIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXJpZmllZF9jbGFpbXMiOnsidmVyaWZpY2F0aW9uIjp7Im91dGNvbWUiOiJmMmNmZTBlMS02ZmJlLTRjYjYtOWU4ZC0xYzFmMTQyN2NjMmEgVkVSSUZJRUQgU1VDQ0VTU0ZVTExZIiwidHJ1c3RfZnJhbWV3b3JrIjoidWtfdGZpZGEiLCJhc3N1cmFuY2VfbGV2ZWwiOiJHUEc0NS1NZWRpdW0iLCJ0aW1lIjoiMjAyMy0wMi0xNVQxNjozOVoiLCJ2ZXJpZmllciI6eyJvcmdhbml6YXRpb24iOiJESVMiLCJ0eG4iOiJhNGRiZTg3Ny1kZjYzLTQ2MDgtOTViMC0zYTdmZTNhNGQ3NTEifX19LCJjbGFpbXMiOnsidXVpZCI6ImYyY2ZlMGUxLTZmYmUtNGNiNi05ZThkLTFjMWYxNDI3Y2MyYSIsImdpdmVuX25hbWUiOiJzYW1wbGVfZ2l2ZW5fbmFtZSIsImZhbWlseV9uYW1lIjoic2FtcGxlX2ZhbWlsaXlfbmFtZSIsImJpcnRoX2RhdGUiOiIxOTkwLTA5LTA4IiwiYWRkcmVzcyI6eyJ1cHJuIjoiOTA2NzAwMDgxNzU5Iiwic3ViQnVpbGRpbmdOYW1lIjoiMC8yIiwiYnVpbGRpbmdOdW1iZXIiOiI5OSIsInN0cmVldE5hbWUiOiJzYW1wbGVfc3RyZWV0X25hbWUiLCJhZGRyZXNzTG9jYWxpdHkiOiJzYW1wbGVfbG9jYWx0aW9uIiwicG9zdGFsQ29kZSI6IlgxMTFYWCJ9fX0=</p>
+
+<p><u>Example signed JWT - Decode by</u> <a href="http://jwt.io">http://jwt.io</a></p>
+
+<p>{</p>
+
+<p>“verified_claims”: {</p>
+
+<p>“verification”: {</p>
+
+<p>“outcome”: “f2cfe0e1-6fbe-4cb6-9e8d-1c1f1427cc2a VERIFIED SUCCESSFULLY”,</p>
+
+<p>“trust_framework”: “uk_tfida”,</p>
+
+<p>“assurance_level”: “GPG45-Medium”,</p>
+
+<p>“time”: “2023-02-15T16:39Z”,</p>
+
+<p>“verifier”: {</p>
+
+<p>“organization”: “DIS”,</p>
+
+<p>“txn”: “a4dbe877-df63-4608-95b0-3a7fe3a4d751”</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>},</p>
+
+<p>“claims”: {</p>
+
+<p>“uuid”: “f2cfe0e1-6fbe-4cb6-9e8d-1c1f1427cc2a”,</p>
+
+<p>“given_name”: “sample_given_name”,</p>
+
+<p>“family_name”: “sample_familiy_name”,</p>
+
+<p>“birth_date”: “1990-09-08”,</p>
+
+<p>“address”: {</p>
+
+<p>“uprn”: “906700081759”,</p>
+
+<p>“subBuildingName”: “0/2”,</p>
+
+<p>“buildingNumber”: “99”,</p>
+
+<p>“streetName”: “sample_street_name”,</p>
+
+<p>“addressLocality”: “sample_localtion”,</p>
+
+<p>“postalCode”: “X111XX”</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p><u>You can use the following table to understand the signed\_jwt’s
+claims</u></p>
+
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 68%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Element</strong></th>
+<th><strong> </strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Max Field Length</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>verification</td>
+<td>outcome</td>
+<td>String representing an identifier that is assigned to the End-User.
+The same as the sub identifier in the id token.</td>
+<td> </td>
+</tr>
+<tr class="even">
+<td>verification</td>
+<td>trust_framework</td>
+<td>The trust framework the IDV check was carried out in accordance
+with.</td>
+<td> </td>
+</tr>
+<tr class="odd">
+<td>verification</td>
+<td>assurance_level</td>
+<td>Assurance level attained within the above trust framework.</td>
+<td> </td>
+</tr>
+<tr class="even">
+<td>verification</td>
+<td>time</td>
+<td>Exact time this check was completed.</td>
+<td> </td>
+</tr>
+<tr class="odd">
+<td>verification</td>
+<td>verifier.organisation</td>
+<td>The organisation that has responsibility for the check.</td>
+<td> </td>
+</tr>
+<tr class="even">
+<td>verification</td>
+<td>verifier.txn</td>
+<td>Unique transaction reference number within the above organisation,
+relating to this IDV check.</td>
+<td> </td>
+</tr>
+<tr class="odd">
+<td>claims</td>
+<td>given_name</td>
+<td>String representing Given names(s) or first name(s) of the End-user
+- also includes middle name(s). People can have multiple given names,
+all can be present, with the names being separated by space
+characters.</td>
+<td>100</td>
+</tr>
+<tr class="even">
+<td>claims</td>
+<td>family_name</td>
+<td>String representing Surname(s) or last names(s) of the End-user.
+People can have multiple family names, all can be present, with the
+names being separated by space characters.</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td>claims</td>
+<td>birthdate</td>
+<td>Represented as an <a href="https://openid.net/specs/openid-connect-core-1_0.html">ISO
+8601:2004</a> [ISO8601‑2004] YYYY-MM-DD format</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>claims</td>
+<td>address</td>
+<td><p>JSON object - Address lines concatenated and comma delimited:</p>
+<p>Uprn Up to 12 digits. String containing only digits.</p>
+<p>organisationName Max 60 characters</p>
+<p>departmentName Max 30 characters</p>
+<p>subBuildingName Max 30 characters</p>
+<p>buildingNumber  integer</p>
+<p>buildingName Max 50 characters</p>
+<p>dependentStreetName Max 60 characters</p>
+<p>streetName Max 60 characters</p>
+<p>doubleDependentAddressLocality Max 35 characters</p>
+<p>dependentAddressLocality Max 35 characters</p>
+<p>addressLocality Max 30 characters</p>
+<p>postalCode Max 7 characters</p>
+<p>Fields are specified based on <a href="https://www.postcodeaddressfile.co.uk/products/postcode_address_file_paf/paf_file_structure-layout.htm">https://www.postcodeaddressfile.co.uk/products/postcode_address_file_paf/paf_file_structure-layout.htm</a></p></td>
+<td><p> </p>
+<p> </p>
+<p> </p>
+<p> </p></td>
+</tr>
+</tbody>
+</table>
+
+<p>The address provided in the Successful Outcome :</p>
+
+<p>This address is validated by taking the claimed name, date of birth and
+address and matching these claims against credit bureau records. These
+records include, voters role data, credit records, fraud markers and
+other data sources. This provides appropriate confidence, along with the
+other document and selfie checks that this is a valid identity to GPG45
+medium. However, the address provided to the relying party is not
+<em>guaranteed</em> to be current as the various records can take time to
+update. It is up to the relying party to understand the level of
+confidence in the address and make risk based decisions in the use of
+the address data in their processes.</p>
+
+<h3 id="unsuccessful-outcomes">Unsuccessful Outcomes</h3>
+
+<p>Where a user could not be verified to the required assurance level, this
+will be communicated to you in the JWT response as illustrated below in
+the outcome element:</p>
+
+<p>{</p>
+
+<p>“verified_claims”:{</p>
+
+<p>“verification”:{</p>
+
+<p>“outcome” : “[UUID] NOT VERIFIED”,</p>
+
+<p>“trust_framework”:”uk_tfida”,</p>
+
+<p>“assurance_level”:”GPG45-MEDIUM”,</p>
+
+<p>“time”:”2018-12-10T13:45:00.000Z”,</p>
+
+<p>“verifier”:{</p>
+
+<p>“organization”:”DIS”,</p>
+
+<p>“txn”:”a7bf64c2-f22c-11ec-b939-0242ac120002”</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>}</p>

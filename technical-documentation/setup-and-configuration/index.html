@@ -1,0 +1,329 @@
+<h1 id="section-2---setup-and-configuration---rp-integration-test">Section 2 - Setup and Configuration - RP integration test</h1>
+
+<p>We have a dedicated integration environment available for Relying<br />
+Parties and or other interested parties, to demo / integrate / trial our<br />
+service offerings.</p>
+
+<p>Integration environment details are:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Feature</strong></th>
+      <th><strong>Integration Details</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>oidc_private_client</td>
+      <td><a href="https://oidc-private-client.swan.sign-in.service.gov.scot/integration">https://oidc-private-client.swan.sign-in.service.gov.scot/integration</a></td>
+    </tr>
+    <tr>
+      <td>mock_service</td>
+      <td><a href="https://mock-dis.main.swan.sign-in.service.gov.scot/">https://mock-dis.main.swan.sign-in.service.gov.scot</a></td>
+    </tr>
+    <tr>
+      <td>oidc_identity_provider</td>
+      <td><a href="https://authz.swan.sign-in.service.gov.scot">https://authz.swan.sign-in.service.gov.scot</a></td>
+    </tr>
+    <tr>
+      <td>discovery_endpoint</td>
+      <td><a href="https://authz.swan.sign-in.service.gov.scot/.well-known/openid-configuration">https://authz.swan.sign-in.service.gov.scot/.well-known/openid-configuration</a></td>
+    </tr>
+    <tr>
+      <td>version_endpoint</td>
+      <td><a href="https://version.swan.sign-in.service.gov.scot/">https://version.swan.sign-in.service.gov.scot</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The things you need to provide us to set up your RP account are:</p>
+
+<p>the external IP (or range of IPs) from which you’ll be connecting<br />
+(both for your service sending requests and expecting responses and<br />
+developers/people getting on to our environment from their devices)</p>
+
+<p>your private_key_jwt, public part.</p>
+
+<p>your FQDN.</p>
+
+<p>your redirect url.</p>
+
+<p>your logout url (optional)</p>
+
+<p>a name of your service.</p>
+
+<p>We will then Register a Client and provide Back a “Client ID”.</p>
+
+<p>Note: Step 6 “name of your service”, will be displayed on specific<br />
+ScotAccount pages for dual branding purposes</p>
+
+<h2 id="provide-ips-for-our-allow-lists">1. Provide IPs for our Allow Lists</h2>
+
+<p>We use IP Allow Lists as a Security Mechanism to restrict access, since<br />
+we are currently a “private beta” offering, as such any Relying Party<br />
+will need to provide to us their public IP Address both for the Client<br />
+Browser Session, and for their service, that is wanting to connect to<br />
+our service. This is because we implement both front and back channel<br />
+communication.</p>
+
+<p>Different Types of Access Needs</p>
+
+<p>Home based access , <a href="https://www.whatismyip.com/">What Is My IP? Shows Your Public IP Address -</a><br />
+<a href="https://www.whatismyip.com/">IPv4 - IPv6</a></p>
+
+<p>Home based access via a vpn, contact your Network Team / Service<br />
+Provider</p>
+
+<p>Office based access, contact your Network Team / Service Provider</p>
+
+<p>How many IPs will I need to provide</p>
+
+<p>1 , if you running everything from a laptop</p>
+
+<p>2, if you running a client / server model</p>
+
+<p>For Production you will only need to provide an IPs for your “BackEnd”<br />
+to communicate with the service</p>
+
+<p>Static IPs if possible</p>
+
+<p>We prefer individual IPs where possible</p>
+
+<p>But ranges are also allowed</p>
+
+<h2 id="provide-your-public-key-for-privatekeyjwt-method-call">2. Provide your public key for private_key_jwt method call</h2>
+
+<p>As part of our client authentication process, the Relying Party<br />
+application will need to provide a public key for the private_key_jwt<br />
+method call.</p>
+
+<p>You’ll need to provide a public key when registering your service. You<br />
+can generate a key pair (a public key and a corresponding private key)<br />
+using <a href="https://www.openssl.org/">OpenSSL</a>.</p>
+
+<p>You’ll need your private key when:</p>
+
+<p>You’re registering your service to use our environments, such as<br />
+Integration or Production.</p>
+
+<p>You request the token using the private key authentication mechanism<br />
+on the /token endpoint.</p>
+
+<p>Once you’ve generated your private key, you must store the key in a<br />
+secure location like aws secrets manager or hashicorp vault, and you<br />
+must not share the private key, and the key must be mounted into the<br />
+application at runtime using a tmpfs file.</p>
+
+<p>You MUST use a different key pair for Production to the one you use in<br />
+the test environment/s.</p>
+
+<p>Supported Algorithms</p>
+
+<p>We support RSA or Elliptic Curve based signing keys.</p>
+
+<p>When deciding between ECDSA vs RSA, both can provide equivalent levels<br />
+of security given long enough key sizes. As ECDSA uses smaller keys to<br />
+achieve the same level of security and it generally performs faster than<br />
+RSA.</p>
+
+<p>When generating an RSA key you need to decide how long the key will be.<br />
+A longer key is more secure but slower.</p>
+
+<p>When generating an elliptic curve key you need to decide on a curve to<br />
+use which corresponds to the length of the key, similar to RSA a longer<br />
+key is more secure but slower.</p>
+
+<p>For ES256 (256 ECDSA key using curve P256 and SHA-256) this provides 128<br />
+bits of security and is considered safe from being cracked beyond 2030.<br />
+For and RSA key to provide equivalent security it will have to have a<br />
+key size of 3072 bits or greater. A 2048 bit RSA key is still considered<br />
+safe from being cracked for the next few years but longer is<br />
+recommended.</p>
+
+<p>Using OpenSSL, run the following on your command line to generate an RSA<br />
+key pair:</p>
+
+<p>openssl genrsa -out private_key.pem 3072</p>
+
+<p>openssl rsa -pubout -in private_key.pem -out public_key.pem</p>
+
+<p>The last parameter (3072 here) is the length of the RSA key in bits.</p>
+
+<p>the number of bits needs to be 2048 or greater</p>
+
+<p>When generating an elliptic curve key you need to select a curve to use.<br />
+The algorithms we support require specific curves. See below.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>JWT Signing algorithm</strong></th>
+      <th><strong>Curve</strong></th>
+      <th><strong>OpenSSL curve name</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ES256</td>
+      <td>P-256</td>
+      <td>prime256v1</td>
+    </tr>
+    <tr>
+      <td>ES384</td>
+      <td>P-384</td>
+      <td>secp384r1</td>
+    </tr>
+    <tr>
+      <td>ES512</td>
+      <td>P-521</td>
+      <td>secp521r1</td>
+    </tr>
+    <tr>
+      <td>ES256K</td>
+      <td>secp256k1</td>
+      <td>secp256k1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Using OpenSSL, run the following on your command line to generate an EC<br />
+key pair:</p>
+
+<p>openssl ecparam -name secp521r1 -genkey -noout -out private_key.pem</p>
+
+<p>openssl ec -in private_key.pem -pubout -out public_key.pem</p>
+
+<p>You have now generated your key pair, which will appear on your machine<br />
+as 2 files:</p>
+
+<p>public_key.pem - This is your public key, which you should share<br />
+with us.</p>
+
+<p>private_key.pem - This is your private key, which you should store<br />
+securely and NOT share.</p>
+
+<p>Once you have generated your key pair, you can use it to create a<br />
+private_key_jwt.</p>
+
+<p>Example private_key_jwt</p>
+
+<p>Base64 Encoded</p>
+
+<p>eyJhbGciOiJFUzI1NiJ9.</p>
+
+<p>ewogICJqdGkiOiJteUpXVElkMDAxIiwKICAic3ViIjoiMzgxNzQ2MjM3NjIiL</p>
+
+<p>AogICJpc3MiOiIzODE3NDYyMzc2MiIsCiAgImF1ZCI6Imh0dHA6Ly9sb2NhbG</p>
+
+<p>hvc3Q6NDAwMC9hcGkvYXV0aC90b2tlbi9kaXJlY3QvMjQ1MjMxMzgyMDUiLAo</p>
+
+<p>gICJleHAiOjE1MzYxNjU1NDAsCiAgImlhdCI6MTUzNjEzMjcwOAp9Cg.</p>
+
+<p>YB4gdhWUGRjWEsEbKDs7-G2WFH2oYz7bAEP5AtegHXInkY9ncA2V3IoA6O_HV</p>
+
+<p>QuFxyCRIklrxsMk32MfNF_ABA</p>
+
+<p>Header part of private_key_jwt</p>
+
+<p>{</p>
+
+<p>“alg”: “ES256”</p>
+
+<p>}</p>
+
+<p>Payload part of private_key_jwt</p>
+
+<p>{</p>
+
+<p>“jti”: “myJWTId001”,</p>
+
+<p>“sub”: “38174623762”,</p>
+
+<p>“iss”: “38174623762”,</p>
+
+<p>“aud”: “http://localhost:4000/api/auth/token/direct/24523138205”,</p>
+
+<p>“exp”: 1536165540,</p>
+
+<p>“iat”: 1536132708</p>
+
+<p>}</p>
+
+<p>Signature part of private_key_jwt</p>
+
+<p>not shown</p>
+
+<p>Tools to help with the creation / validation of you<br />
+private_key_jwt</p>
+
+<p>There are many utilities on the internet. These are just a few common<br />
+ones to call out:</p>
+
+<p>Creation -<br />
+<a href="https://github.com/mitreid-connect/json-web-key-generator">json-web-key-generator</a><br />
+or <a href="https://mkjwk.org/">mkjwk - JSON Web Key Generator</a></p>
+
+<p>Validate - <a href="https://jwt.io/">JSON Web Tokens - jwt.io</a></p>
+
+<p>Utilities - <a href="https://www.base64decode.org/">Base64 Decode and Encode -</a><br />
+<a href="https://www.base64decode.org/">Online</a> and <a href="https://www.base64encode.org/">Base64 Encode and</a><br />
+<a href="https://www.base64encode.org/">Decode - Online</a></p>
+
+<h2 id="provide-us-with-you-fqdn-or-localhost">3. Provide us with you FQDN or localhost</h2>
+
+<p>As part of the on-boarding process you will need to provide us with your<br />
+fully qualified Domain Name.</p>
+
+<p>You can supply “localhost”, if you are running both the client<br />
+browser and the server from your laptop</p>
+
+<p>You can supply, a Public FQDN. Example “dummyrp.test.org.gov.scot”</p>
+
+<p>The use of “localhost and “http” is ONLY allowed in our integration<br />
+environment</p>
+
+<h2 id="provide-us-with-your-redirect-url">4. Provide us with your redirect URL</h2>
+
+<p>As part of the on-boarding process you will need to provide us a set of<br />
+one of many redirect-url, as part of the client registration process.</p>
+
+<p>Full detailed information can be found in “Stage 3 - Technical - Make<br />
+Requests with Auth Code Flow and PKCE”</p>
+
+<h2 id="provide-dis-with-your-logout-uri">5 Provide DIS with your Logout URI</h2>
+
+<p>As part of the on-boarding client registration process you can provide<br />
+us a Logout url, this is an optional requirement. More information about<br />
+the use of Logout can be found in “Stage 3 Technical - Make a Request<br />
+for Logout” section.</p>
+
+<p>For an Example, see below:</p>
+
+<ul>
+  <li>https://<em>yourservicetest</em>.org.gov.scot/logout</li>
+</ul>
+
+<h2 id="we-will-register-a-client-and-provide-back-a-client-id">6. We will Register a Client, and provide Back a “Client ID”</h2>
+
+<p>Once you have provided us all the information from steps 1 to 5, we will<br />
+register your Relying Party application and return a “Client ID”, back<br />
+to you.</p>
+
+<h2 id="simple-test">7. Simple Test</h2>
+
+<p>There is a simple way you can use to ensure the IP Allow List has been<br />
+implemented for you in our integration environment as follows:</p>
+
+<p>GET<br />
+<a href="https://version.swan.sign-in.service.gov.scot/">https://version.swan.sign-in.service.gov.scot</a></p>
+
+<p>If successful, you will receive a http response code of 200, and a<br />
+json object</p>
+
+<p>If failure, you will receive a http response code of 504, timeout.<br />
+You should contact us in this case.</p>
+
+<p>Example Version Json object</p>
+
+<p>{“App”:{“SSO”:{“Authn-Frontend”:{“commit_sha”:”c59129d74871de4beca837ed6045c6e973c23d27”,”build_number”:”14112”,”version”:”release-20221116.1”,”release_id”:”20221116.1”},”Authn-Api”:{“commit_sha”:”c59129d74871de4beca837ed6045c6e973c23d27”,”build_number”:”14112”,”version”:”release-20221116.1”,”release_id”:”20221116.1”},”Authz-Service”:{“commit_sha”:”c59129d74871de4beca837ed6045c6e973c23d27”,”build_number”:”14112”,”version”:”release-20221116.1”,”release_id”:”20221116.1”},”Authz-Server”:{“commit_sha”:”c59129d74871de4beca837ed6045c6e973c23d27”,”build_number”:”14112”,”version”:”release-20221116.1”,”release_id”:”20221116.1”}}},”Platform”:{“sg-identity-platform-sgidentityplatformsgidentityplatformimportedclustersgidentityplat-167GRCPH6KXPA”:”20221116.0”,”sg-identity-platform”:”20221116.0”,”platform-dns-stack”:”20221116.0”,”identity-eks-stack”:”20221116.0”,”BaselineStack”:”20221116.0”,”subscription-filter-stack”:”20221116.0”,”ssm-stack”:”20221116.0”,”sg-alerting-stack”:”20221116.0”,”PersistentLoggingStack”:”20221116.0”},”PWYA”:{“Consent-Service”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”},”Consent-UI”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”},”IDV-Service”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”},”IDV-UI”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”},”Orchestrator”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”},”Attribute-Service”:{“version”:”release-20221116.0”,”commit_sha”:”2bd208f0af7b715b0f0aee66a7c4d381668fafc0”,”build_number”:”14108”,”release_id”:”20221116.0”}}}</p>
