@@ -15,7 +15,7 @@ jobs:
           ruby-version: '3.1' # Adjust to your Ruby version
           bundler-cache: true
       - name: Build Middleman site
-        run: bundle exec middleman build --buiild-dir=site
+        run: bundle exec middleman build --build-dir=site
 #      - name: Configure AWS Credentials
 #        uses: aws-actions/configure-aws-credentials@v4
 #        with:
