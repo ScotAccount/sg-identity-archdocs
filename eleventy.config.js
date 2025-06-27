@@ -13,6 +13,7 @@ export default function(eleventyConfig) {
     dir: {
       // The folder where all your content will live:
       input: 'app',
-    }
+    },
+    pathPrefix: 'sg-identity-archdocs'
   }
 };
