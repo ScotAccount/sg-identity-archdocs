@@ -10,10 +10,10 @@ export default function(eleventyConfig) {
     dataTemplateEngine: 'njk',
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk',
+    pathPrefix: process.env.GITHUB_ACTIONS ? '/sg-identity-archdocs/' : '/',
     dir: {
       // The folder where all your content will live:
       input: 'app',
-    },
-    pathPrefix: 'sg-identity-archdocs'
+    }
   }
 };
