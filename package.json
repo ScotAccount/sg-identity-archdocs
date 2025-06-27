@@ -1,10 +1,10 @@
 {
   "name": "eleventy-sample",
   "version": "1.0.0",
-  "main": "eleventy.config.js",  "scripts": {
+  "main": "eleventy.config.js",  
+  "scripts": {
     "build": "eleventy",
     "start": "eleventy --serve"
-
   },
   "keywords": [],
   "author": "",
