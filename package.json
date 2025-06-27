@@ -13,5 +13,16 @@
     "@11ty/eleventy": "^3.1.2",
     "@x-govuk/govuk-eleventy-plugin": "^7.0.1"
   },
-  "description": ""
+  "description": "This project uses the [Tech Docs Template][template], which is a [Middleman template][mmt] that you can use to build technical documentation using a GOV.UK style.",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScotAccount/sg-identity-archdocs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ScotAccount/sg-identity-archdocs/issues"
+  },
+  "homepage": "https://github.com/ScotAccount/sg-identity-archdocs#readme"
 }
