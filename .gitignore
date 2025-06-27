@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules/
+
+# Middleman and static site build outputs
+build/
+_site/
+out/
+site-build/
+
+# Ruby dependencies
+.bundle/
+vendor/
+
+# dotenv environment files
+.env
+
+# Logs and temp files
+*.log
+tmp/
+.DS_Store
+
+# Byebug command history
+.byebug_history
+
+# VS
