@@ -1,34 +1,33 @@
 {
-  "name": "eleventy-sample",
+  "name": "sg-identity-archdocs",
   "version": "1.0.0",
-  "main": "eleventy.config.js",
-  "scripts": {
-    "build:css": "sass app/assets/sass/main.scss app/assets/css/settings.scss --load-path=node_modules",
-    "build": "npm run build:css && eleventy",
-    "start": "npm run build:css && eleventy --serve"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "@11ty/eleventy": "^3.1.2",
-    "@scottish-government/design-system": "^3.0.1",
-    "@x-govuk/govuk-eleventy-plugin": "^7.0.1"
-  },
-  "description": "This project uses the [Tech Docs Template][template], which is a [Middleman template][mmt] that you can use to build technical documentation using a GOV.UK style.",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "An example Eleventy project for Scottish Government Digital Identity Service Architecture Documentation.",
+  "keywords": [
+    "docs-as-code",
+    "eleventy",
+    "scottish-government",
+    "digital-identity",
+    "architecture",
+    "documentation"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ScotAccount/sg-identity-archdocs.git"
+    "url": "https://github.com/ScotAccount/sg-identity-archdocs.git"
   },
-  "bugs": {
-    "url": "https://github.com/ScotAccount/sg-identity-archdocs/issues"
+  "license": "MIT",
+  "contributors": [
+    {"name": "Dean Miley", "email": "dean.miley@govscot.com"}
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
   },
-  "homepage": "https://github.com/ScotAccount/sg-identity-archdocs#readme",
-  "devDependencies": {
-    "sass": "^1.89.2"
+  "engines": {
+    "node": ">=22.0.0 <23.0.0"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@x-govuk/govuk-eleventy-plugin": "^6.7.2"
   }
 }
